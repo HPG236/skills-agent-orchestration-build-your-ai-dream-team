@@ -1,0 +1,46 @@
+{
+  "projects": [
+    {
+      "name": "Website Redesign",
+      "owner": "Alice Johnson",
+      "status": "active",
+      "recentActivity": "Deployed new landing page",
+      "priority": "high"
+    },
+    {
+      "name": "Mobile App Beta",
+      "owner": "Ravi Patel",
+      "status": "paused",
+      "recentActivity": "User feedback collected; pausing for roadmap sync",
+      "priority": "medium"
+    },
+    {
+      "name": "Marketing Automation",
+      "owner": "Luis García",
+      "status": "active",
+      "recentActivity": "Launched holiday campaign",
+      "priority": "low"
+    },
+    {
+      "name": "Data Warehouse Migration",
+      "owner": "Chen Wei",
+      "status": "inactive",
+      "recentActivity": "Waiting for budget approval",
+      "priority": "high"
+    },
+    {
+      "name": "Security Audit",
+      "owner": "Fatima Noor",
+      "status": "active",
+      "recentActivity": "Remediation plan in progress",
+      "priority": "medium"
+    },
+    {
+      "name": "Customer Onboarding",
+      "owner": "Marcus Lee",
+      "status": "paused",
+      "recentActivity": "Integration testing delayed",
+      "priority": "low"
+    }
+  ]
+}

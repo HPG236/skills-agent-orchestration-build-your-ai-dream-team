@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Project Pulse</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="dashboard" role="main">
+    <header class="dashboard__header">
+      <h1 class="dashboard__title">Project Pulse</h1>
+      <p class="dashboard__subtitle">At-a-glance status of your active projects.</p>
+    </header>
+
+    <main>
+      <div id="error" role="alert" aria-live="assertive" style="display:none;color:#da3633;margin-bottom:1rem;"></div>
+      <section class="dashboard__grid" id="projects" aria-label="Projects"></section>
+    </main>
+  </div>
+
+  <script defer>
+  (function(){
+    const grid = document.getElementById('projects');
+    const errorEl = document.getElementById('error');
+
+    function createCard(project) {
+      const article = document.createElement('article');
+      article.className = 'project-card';
+      article.setAttribute('tabindex','0');
+      article.setAttribute('role','article');
+
+      const header = document.createElement('div');
+      header.className = 'project-card__header';
+
+      const name = document.createElement('h3');
+      name.className = 'project-card__name';
+      name.textContent = project.name || 'Untitled Project';
+
+      const priority = document.createElement('span');
+      const prio = (project.priority || 'low').toLowerCase();
+      priority.className = 'project-card__priority project-card__priority--' + (prio === 'high' ? 'high' : prio === 'medium' ? 'medium' : 'low');
+      priority.textContent = (project.priority || '').toUpperCase();
+
+      header.appendChild(name);
+      header.appendChild(priority);
+
+      const body = document.createElement('div');
+      body.className = 'project-card__body';
+
+      const ownerField = document.createElement('div');
+      ownerField.className = 'project-card__field';
+      const ownerLabel = document.createElement('div');
+      ownerLabel.className = 'project-card__field-label';
+      ownerLabel.textContent = 'Owner';
+      const ownerValue = document.createElement('div');
+      ownerValue.className = 'project-card__field-value project-card__owner';
+      ownerValue.textContent = project.owner || '—';
+      ownerField.appendChild(ownerLabel);
+      ownerField.appendChild(ownerValue);
+
+      const statusField = document.createElement('div');
+      statusField.className = 'project-card__field';
+      const statusLabel = document.createElement('div');
+      statusLabel.className = 'project-card__field-label';
+      statusLabel.textContent = 'Status';
+      const statusValue = document.createElement('span');
+      const status = (project.status || 'inactive').toLowerCase();
+      statusValue.className = 'project-card__status project-card__status--' + (status === 'active' ? 'active' : status === 'paused' ? 'paused' : 'inactive');
+      statusValue.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+      statusField.appendChild(statusLabel);
+      statusField.appendChild(statusValue);
+
+      const activityField = document.createElement('div');
+      activityField.className = 'project-card__field';
+      const activityLabel = document.createElement('div');
+      activityLabel.className = 'project-card__field-label';
+      activityLabel.textContent = 'Recent Activity';
+      const activityValue = document.createElement('div');
+      activityValue.className = 'project-card__field-value project-card__activity';
+      activityValue.textContent = project.recentActivity || 'No recent activity';
+      activityField.appendChild(activityLabel);
+      activityField.appendChild(activityValue);
+
+      body.appendChild(ownerField);
+      body.appendChild(statusField);
+      body.appendChild(activityField);
+
+      article.appendChild(header);
+      article.appendChild(body);
+
+      return article;
+    }
+
+    function showError(message){
+      errorEl.style.display = '';
+      errorEl.textContent = message;
+    }
+
+    fetch('./project-data.json').then(function(res){
+      if (!res.ok) throw new Error('Network response was not ok: ' + res.status);
+      return res.json();
+    }).then(function(data){
+      if (!data || !Array.isArray(data.projects)) throw new Error('Invalid project data');
+      if (data.projects.length === 0) {
+        const empty = document.createElement('p');
+        empty.textContent = 'No projects found.';
+        grid.appendChild(empty);
+        return;
+      }
+      data.projects.forEach(function(p){
+        const card = createCard(p);
+        grid.appendChild(card);
+      });
+    }).catch(function(err){
+      console.error(err);
+      showError('Unable to load project data. ' + (err.message || ''));
+    });
+
+  })();
+  </script>
+</body>
+</html>
